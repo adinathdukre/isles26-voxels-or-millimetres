@@ -1,0 +1,107 @@
+# ==============================================================================
+# Analysis + training environment.
+#
+# This is NOT the container environment. `submission/requirements.txt` pins the
+# versions inside the image that passed the ISLES'26 container test, and those
+# pins differ from these on purpose (see "Two environments" below). Installing
+# this file will not reproduce the submission image, and installing that one
+# will not reproduce the reported numbers.
+#
+#     pip install -r requirements.txt
+#
+# Versions below are the ones the reported experiments actually ran on. Where a
+# pin is load-bearing -- i.e. changing it can change a published number rather
+# than merely the speed -- it is marked LOAD-BEARING and the reason is given.
+# The load-bearing set is small and worth memorising: panoptica, scikit-learn,
+# connected-components-3d, and the numpy MAJOR. Those four decide what a lesion
+# instance is, how instances are matched, and how PR-AUC is integrated. Every
+# other pin here is a record of what we ran, not a constraint on what you run.
+#
+# Every entry below is imported by a file in this tree, or (scikit-learn) by the
+# organisers' evaluation module that the scorers call. Pins for libraries that
+# nothing imports any more have been removed rather than carried along: pip will
+# still install matplotlib, batchgenerators and scikit-image as transitive
+# dependencies of nnunetv2, but no file here imports them, so this file does not
+# claim them.
+# ==============================================================================
+
+# --- Metric stack: change nothing here without re-running the scorers ---------
+
+# LOAD-BEARING. Panoptica supplies the instance matching behind every Detection
+# F1 we report: Recognition Quality with ConnectedComponentsInstanceApproximator
+# + NaiveThresholdMatching at IoU 0.25. Matching semantics and the RQ definition
+# have moved between Panoptica majors; a different major silently reports a
+# different F1 on the same masks. analysis/lesion_pr.py calls it directly, the
+# other scorers reach it through the organisers' eval_utils.py.
+panoptica==2.1.6
+
+# LOAD-BEARING. PR-AUC is precision_recall_curve() followed by auc(recall,
+# precision) -- trapezoidal integration, deliberately not average_precision_score.
+# The pin is here so the curve's tie-handling and endpoint conventions stay put.
+# Note that no file in this repository imports sklearn: it is the organisers'
+# eval_utils.py that needs it, and eval_utils.py is not redistributable (below),
+# so the pin has to live here or it lives nowhere.
+scikit-learn==1.8.0
+
+# LOAD-BEARING. 26-connectivity connected components define what a "lesion
+# instance" is, for the 30 mm^3 decision layer and for every lesion-wise count.
+# Keep the connectivity argument explicit in code; keep the version pinned here.
+connected-components-3d==3.29.0
+
+# LOAD-BEARING (major version). The analysis environment is numpy 1.x. cc3d and
+# panoptica above were resolved against it. The container is numpy 2.x, which is
+# fine there because nothing in the container computes a metric.
+numpy==1.26.4
+
+# Header-preserving NIfTI I/O: voxel spacing from the header is what converts a
+# mm^3 threshold into a per-case voxel count, so reading spacing correctly is
+# the whole mm^3-versus-voxels comparison. Patch version is not load-bearing.
+SimpleITK==2.5.5
+
+# scipy.stats.rankdata for the paired rank statistics in analysis/nested_cv.py,
+# analysis/official_score.py and analysis/site_transfer.py, and scipy.ndimage
+# labelling in training/trainers/isles_blob.py. Not load-bearing.
+scipy==1.17.1
+
+# --- Training and inference --------------------------------------------------
+
+# nnU-Net v2. The trainers in training/trainers/ subclass its classes, so the
+# minor version has to expose nnUNetTrainer, the DA5/NoDA/NoMirroring variants,
+# DC_and_CE_loss, MemoryEfficientSoftDiceLoss, get_tp_fp_fn_tn,
+# DeepSupervisionWrapper, nnUNetTrainerNoDeepSupervision and PolyLRScheduler at
+# the import paths used here. 2.8.0 is what trained the shipped weights.
+# NOTE: the container pins nnunetv2==2.6.2 -- inference only, and the checkpoint
+# format is compatible across the two.
+nnunetv2==2.8.0
+
+# Pulled in by nnunetv2; listed anyway because training/trainers/isles_primus.py
+# imports PrimusS/PrimusM/PrimusB from it by name rather than through nnU-Net,
+# and would break on a resolver that dropped it.
+dynamic-network-architectures>=0.4
+
+# Not pinned on purpose: install the build that matches your CUDA. 2.12.0 (cu12)
+# is what trained the released folds; the submission image inherits torch
+# 2.13.0+cu126 from its base image and therefore does not list torch at all.
+# Any 2.x that nnunetv2 accepts will load the checkpoints.
+torch>=2.4
+
+# ==============================================================================
+# Two environments, and why they disagree
+#
+#   submission/requirements.txt   numpy 2.5.1, nnunetv2 2.6.2, cc3d 4.0.0,
+#                                 SimpleITK 2.5.6, torch from the base image.
+#                                 Frozen at the versions that passed the
+#                                 container test. Do not "update" it.
+#   requirements.txt (this file)  numpy 1.26.4, nnunetv2 2.8.0, cc3d 3.29.0,
+#                                 SimpleITK 2.5.5, torch 2.12.0.
+#                                 The machine the experiments ran on.
+#
+# The divergence is real and is left visible rather than reconciled after the
+# fact: the container was frozen in August 2026 and re-pinning it would have
+# invalidated a passing sanity-check run.
+#
+# NOT INSTALLABLE FROM PyPI, AND REQUIRED BY analysis/:
+#   analysis/official/eval_utils.py -- authored by Ezequiel de la Rosa (ISLES'26
+#   organiser), not redistributed here. Obtain it from the official ISLES'26
+#   challenge materials and drop it in. See analysis/official/README.md.
+# ==============================================================================

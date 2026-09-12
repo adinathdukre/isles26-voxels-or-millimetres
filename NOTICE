@@ -1,0 +1,200 @@
+ISLES'26 — lesion-size filtering for native-space stroke segmentation
+Copyright 2026 Govinda Kolli, Adinath Madhavrao Dukre, Imran Razzak
+
+This product includes software developed for the ISLES'26 challenge and for the
+MICCAI 2026 SWITCH+ workshop paper "Voxels or Millimetres? A Controlled
+Comparison of Lesion-Size Filtering for Native-Space Stroke Segmentation".
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Scope of that licence: it covers everything in this repository — the source
+code, the shell scripts and the documentation that sits next to them. There is
+no carve-out, because this repository is code only. The accepted manuscript is
+not distributed here; copyright in the published version is Springer's under the
+LNCS agreement, so it stays with the publisher rather than being re-licensed
+into an Apache tree. Cite the paper instead (see `CITATION.cff`); the scripts
+under `analysis/` are the ones that produced the numbers it reports.
+
+--------------------------------------------------------------------------------
+1. Third-party code this repository is derived from
+--------------------------------------------------------------------------------
+
+1.1 ISLES'26 Docker submission template
+    Copyright the ISLES'26 challenge organisers.
+    Source: https://github.com/ezequieldlrosa/isles26-docker-template
+    Licensed under the Apache License, Version 2.0.
+
+    Everything under `submission/` descends from that template. `Dockerfile`,
+    `app.py`, `do_build.sh`, `do_save.sh`, `do_test_run.sh` and the fixtures
+    under `test/input/` are the template's files with project-specific edits;
+    `inference.py` keeps the template's Grand Challenge I/O contract and
+    docstring and replaces the prediction logic. The template's own LICENSE is
+    Apache-2.0 with an unfilled `[yyyy] [name of copyright owner]` placeholder
+    and it ships no NOTICE file, so there was no upstream notice text to carry
+    forward here; this entry is that attribution.
+
+1.2 nnU-Net (nnunetv2)
+    Copyright the Division of Medical Image Computing, German Cancer Research
+    Center (DKFZ), and the nnU-Net authors.
+    Source: https://github.com/MIC-DKFZ/nnUNet
+    Licensed under the Apache License, Version 2.0.
+
+    Isensee, F., Jaeger, P.F., Kohl, S.A.A., Petersen, J., Maier-Hein, K.H.
+    "nnU-Net: a self-configuring method for deep learning-based biomedical image
+    segmentation." Nature Methods 18(2), 203-211 (2021).
+    Isensee, F., Wald, T., Ulrich, C., Baumgartner, M., Roy, S., Maier-Hein, K.,
+    Jaeger, P.F. "nnU-Net Revisited: A Call for Rigorous Validation in 3D Medical
+    Image Segmentation." MICCAI 2024, LNCS 15009, 488-498.
+
+    The trainers under `training/trainers/` subclass nnU-Net classes and follow
+    nnU-Net's plugin conventions; they are derived works of nnU-Net and are
+    distributed under the same licence. The submitted algorithm is an nnU-Net
+    ResEnc-M model and `submission/inference.py` drives nnU-Net's predictor.
+    nnU-Net itself is NOT vendored here — install it from PyPI or from source.
+
+1.3 dynamic-network-architectures
+    Copyright the Division of Medical Image Computing, German Cancer Research
+    Center (DKFZ), and the dynamic-network-architectures authors.
+    Source: https://github.com/MIC-DKFZ/dynamic-network-architectures
+    Licensed under the Apache License, Version 2.0.
+
+    `training/trainers/isles_primus.py` imports `PrimusS`, `PrimusM` and
+    `PrimusB` from `dynamic_network_architectures.architectures.primus` by name
+    and wraps each in an nnU-Net trainer. Nothing in that package is copied or
+    modified here: the trainer exists only to reconcile nnU-Net's assumptions
+    with those classes (`output_channels` rather than `num_classes`, a single
+    full-resolution head rather than deep supervision, AdamW rather than the
+    convnet SGD schedule), and it says so in its module docstring.
+
+    Wald, T., et al. "Primus." arXiv:2503.01835 (2025) — the architecture the
+    trainer wraps, cited as the module itself cites it.
+
+    The same package also supplies the residual-encoder U-Net that nnU-Net
+    builds the shipped ResEnc-M configuration from, so it is a dependency of the
+    submitted model as much as of the sweep. Not vendored: it arrives with
+    nnunetv2 and is listed explicitly in `requirements.txt` only because
+    `isles_primus.py` imports it by name rather than going through nnU-Net.
+
+--------------------------------------------------------------------------------
+2. Third-party libraries this repository depends on at runtime
+--------------------------------------------------------------------------------
+
+None of these are vendored. They are installed from PyPI via `requirements.txt`
+(analysis and training) or `submission/requirements.txt` (the container). This
+list is what the code actually imports, re-checked against the import statements
+in the tree — not a wish list. Two consequences of that rule are worth stating
+rather than leaving as apparent omissions: libraries that only ever arrive as
+transitive dependencies of nnunetv2 and are never imported by a file here are
+not listed below even when a pin mentions them (scikit-image in
+`submission/requirements.txt` is the one such pin), and a library that stopped
+being imported when its only caller left the tree was removed from this list
+rather than left standing.
+
+2.1 Panoptica — Apache License, Version 2.0
+    Copyright the BrainLesion / Panoptica authors.
+    Source: https://github.com/BrainLesion/panoptica
+
+    Kofler, F., Moeller, H., Buchner, J.A., et al. "Panoptica -- instance-wise
+    evaluation of 3D semantic and instance segmentation maps." arXiv:2312.02608
+    (2023).
+
+    Panoptica supplies the instance matching behind every Detection F1 number
+    reported here: Recognition Quality under
+    `ConnectedComponentsInstanceApproximator` + `NaiveThresholdMatching` at
+    IoU 0.25. `analysis/lesion_pr.py` calls it directly; the other scorers reach
+    it through the organisers' evaluation module (section 3).
+
+2.2 connected-components-3d (`cc3d`)
+    GNU Lesser General Public License, version 3.0 or later (LGPL-3.0-or-later).
+    Copyright the connected-components-3d authors (Seung Lab, Princeton).
+    Source: https://github.com/seung-lab/connected-components-3d
+
+    Called out separately because it is the one copyleft dependency here. It is
+    used as an unmodified library, imported at runtime and never vendored or
+    modified, so this repository stays Apache-2.0; anyone who redistributes a
+    built artefact containing cc3d (for example the submission image) inherits
+    the LGPL's obligations for that copy of cc3d. Its 26-connectivity labelling
+    is what defines a "lesion instance" for the 30 mm^3 decision layer, so it is
+    load-bearing and cannot simply be swapped out. Ten files import it:
+    `submission/inference.py`, `training/build_msl_dataset.py`,
+    `training/trainers/isles_blob.py`, and `analysis/best_ensemble.py`,
+    `analysis/confidence_filter.py`, `analysis/empty_map_risk.py`,
+    `analysis/lesion_pr.py`, `analysis/miss_anatomy.py`,
+    `analysis/official_score.py` and `analysis/weighted_ensemble.py`.
+    `analysis/sweep_mm3_all5.py` reaches the same labelling through
+    `analysis/official_score.py` instead of importing it.
+
+2.3 PyTorch (`torch`) — BSD-3-Clause. https://github.com/pytorch/pytorch
+    Every trainer under `training/trainers/` and `submission/inference.py`.
+    The container inherits it from its base image,
+    `pytorch/pytorch:2.13.0-cuda12.6-cudnn9-runtime`, which is why
+    `submission/requirements.txt` pins no torch at all. That image also carries
+    NVIDIA's CUDA and cuDNN runtime libraries, which are redistributed under
+    NVIDIA's own terms and not under a permissive licence. Nothing from it is
+    redistributed by this repository — `submission/Dockerfile` ships only the
+    `FROM` line — but, as with cc3d above, whoever distributes a built image
+    distributes those libraries with it.
+
+2.4 NumPy — BSD-3-Clause. https://github.com/numpy/numpy
+    Imported almost everywhere — sixteen files. The analysis environment is
+    numpy 1.x and the container is numpy 2.x, deliberately (see
+    `requirements.txt`).
+
+2.5 SciPy — BSD-3-Clause. https://github.com/scipy/scipy
+    `scipy.stats.rankdata` for the paired rank statistics in
+    `analysis/nested_cv.py`, `analysis/official_score.py` and
+    `analysis/site_transfer.py`; `scipy.ndimage` labelling in
+    `training/trainers/isles_blob.py`.
+
+2.6 SimpleITK — Apache License, Version 2.0. https://github.com/SimpleITK/SimpleITK
+    Header-preserving NIfTI I/O in nine files. Voxel spacing read from the
+    header is what converts a mm^3 threshold into a per-case voxel count, which
+    is the whole mm^3-versus-voxels comparison.
+
+2.7 scikit-learn — BSD-3-Clause. https://github.com/scikit-learn/scikit-learn
+    Not imported by our own code. It is required by the organisers' evaluation
+    module (section 3), which computes PR-AUC as `precision_recall_curve`
+    followed by `auc(recall, precision)`, and is pinned in `requirements.txt`
+    for that reason.
+
+2.8 FastAPI — MIT Licence. https://github.com/fastapi/fastapi
+2.9 Uvicorn — BSD-3-Clause. https://github.com/encode/uvicorn
+    Both used only by `submission/app.py`, which is the template's Grand
+    Challenge HTTP server (section 1.1).
+
+--------------------------------------------------------------------------------
+3. ISLES'26 official evaluation utilities — NOT REDISTRIBUTED
+--------------------------------------------------------------------------------
+
+Authored by Ezequiel de la Rosa (ISLES'26 challenge organiser).
+
+`analysis/official/eval_utils.py` is deliberately ABSENT from this repository.
+It is not our work and it ships without a licence header, so it is not ours to
+re-publish. Most scorers in `analysis/` import it — directly or through
+`analysis/official_score.py` — so you must obtain it yourself from the official
+ISLES'26 challenge materials and place it at `analysis/official/eval_utils.py`.
+It is listed in `.gitignore` so that it cannot be committed here by accident.
+
+See `analysis/official/README.md` for what the file must provide, which scripts
+need it and which do not, and why the scorers use the organisers' code rather
+than a reimplementation.
+
+--------------------------------------------------------------------------------
+4. Data
+--------------------------------------------------------------------------------
+
+No ISLES'26 imaging data, ground-truth segmentation, model checkpoint or
+prediction volume is distributed here, and none should ever become distributable
+by accident: `.gitignore` blocks the volume and weight formats outright, and
+also blocks the per-case scorer caches under `analysis/`, which are derived from
+the data and carry subject identifiers even though they are only numbers.
+The challenge data is obtained from the ISLES'26 organisers under their own
+terms.
+
+Two properties of that cohort are assumed by the code and are stated here
+because the dataset itself is not ours to describe in detail. The pooled
+out-of-fold evaluation covers 1,453 subjects. Voxel volume across that cohort
+spans 0.031 to 5.27 mm^3 — a factor of roughly 170 — because ISLES'26 is
+native-space and multi-site; that spread is precisely why a size threshold
+expressed in voxels and one expressed in mm^3 are different filters, and it is
+the reason this repository exists.

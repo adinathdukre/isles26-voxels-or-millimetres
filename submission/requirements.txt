@@ -1,0 +1,25 @@
+# Pinned to the exact versions in the image that passed the container test.
+# torch/CUDA come from the base image (torch 2.13.0+cu126) and are inherited via
+# --system-site-packages, so they are deliberately NOT listed here.
+#
+# This file is a record of a passing run, not a dependency wish list. Nothing is
+# removed from it because a newer resolution looks tidier: re-pinning would mean
+# the image on Grand Challenge is no longer the image that was tested.
+numpy==2.5.1
+SimpleITK==2.5.6
+# KEPT ON PURPOSE, although no file in this repository imports skimage. nnunetv2
+# declares scikit-image>=0.19.3, so pip installs it into the image whether or not
+# this line exists; the line only decides WHICH version lands there. Deleting it
+# would not slim the image by one byte -- it would just hand the choice to the
+# resolver and change the contents of a container that has already passed the
+# test. So it stays, and this comment is why it is not evidence of a stray
+# import. (The analysis environment has no such pin, because there pip is not
+# building anything we ship.)
+Scikit-image==0.26.0
+fastapi==0.141.1
+uvicorn==0.52.1
+nnunetv2==2.6.2
+# 26-connectivity labelling for the instance decision layer in inference.py.
+# LGPL-3.0-or-later: this is the one copyleft library inside the image, and
+# redistributing the image redistributes it. See NOTICE section 2.2.
+connected-components-3d==4.0.0

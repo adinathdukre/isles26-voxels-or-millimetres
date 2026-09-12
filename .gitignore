@@ -1,0 +1,120 @@
+# ==============================================================================
+# ISLES'26 — what must never reach a public repository
+#
+# The rule of thumb: this repo holds code and the documentation that explains it.
+# Anything that is a weight, a volume, a prediction or a log stays out of it.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Model weights and checkpoints
+# The shipped 5-fold ResEnc-M ensemble is several GB. submission/model/ carries
+# only a README explaining how to populate it.
+# ------------------------------------------------------------------------------
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.onnx
+*.safetensors
+submission/model/**
+!submission/model/README.md
+
+# ------------------------------------------------------------------------------
+# Container images and archives
+# do_save.sh writes a multi-GB .tar.gz next to the Dockerfile.
+# ------------------------------------------------------------------------------
+*.tar.gz
+*.tar
+*.tgz
+*.zip
+
+# ------------------------------------------------------------------------------
+# Imaging data, ground truth and predictions
+# No ISLES'26 volume is redistributable. .npz covers nnU-Net's preprocessed
+# cases and every cached probability map the sweep wrote.
+# ------------------------------------------------------------------------------
+*.npz
+*.npy
+*.nii
+*.nii.gz
+*.mha
+*.mhd
+*.raw
+*.nrrd
+*.dcm
+
+# ------------------------------------------------------------------------------
+# nnU-Net working trees
+# Set by training/env.sh; they hold raw data, preprocessed cases, checkpoints
+# and per-fold validation output. Roots are configurable (ISLES_ROOT,
+# ISLES_NNUNET_RESULTS, ISLES_GT), so ignore them wherever they land.
+# ------------------------------------------------------------------------------
+nnUNet_raw/
+nnUNet_preprocessed/
+nnUNet_results/
+**/nnUNet_raw/
+**/nnUNet_preprocessed/
+**/nnUNet_results/
+
+# ------------------------------------------------------------------------------
+# Scorer output
+# Every script in analysis/ writes its result cache next to itself, keyed by
+# case ID: sweep_mm3_all5.json alone is ~1.8 MB of per-subject Dice, lesion
+# counts and ground-truth voxel volumes for all 1,453 subjects. Those are
+# derived from data we cannot redistribute -- a subject roster is still a
+# subject roster -- so they are run output, not source. Rebuild them by running
+# the scripts; never commit them. No .json is checked in under analysis/, which
+# is why the glob is safe to leave this broad.
+# ------------------------------------------------------------------------------
+analysis/*.json
+analysis/official_scores/
+
+# ------------------------------------------------------------------------------
+# The organisers' evaluation module
+# analysis/official/eval_utils.py is Ezequiel de la Rosa's and ships without a
+# licence header; it is not ours to re-publish (see NOTICE section 3). You have to
+# fetch it yourself to run the scorers, and this line makes sure the copy you
+# drop in never travels back out with a `git add -A`.
+# ------------------------------------------------------------------------------
+analysis/official/eval_utils.py
+
+# ------------------------------------------------------------------------------
+# Logs and run output
+# ------------------------------------------------------------------------------
+logs/
+*.log
+slurm-*.out
+submission/test/output/
+sweep_out/
+predictions/
+
+# ------------------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ------------------------------------------------------------------------------
+# Virtual environments
+# ------------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ------------------------------------------------------------------------------
+# Editors and operating systems
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/

@@ -1,0 +1,64 @@
+cff-version: 1.2.0
+message: >-
+  If you use this code, or any number produced by it, please cite the SWITCH+
+  workshop paper under `preferred-citation`.
+title: >-
+  Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering for
+  Native-Space Stroke Segmentation
+abstract: >-
+  Source code for a controlled comparison of voxel-count versus
+  millimetre-cubed lesion-size filtering in native-space stroke lesion
+  segmentation: the ISLES'26 submission container, the nnU-Net training and
+  dataset-conversion code, and the measurement scripts. Pooled out-of-fold over
+  1,453 subjects the shipped model reaches Dice 0.6552, Detection F1 0.6063 and
+  PR-AUC 0.7617; filtering at all moves Detection F1 from 0.5333 to 0.5895, and
+  at matched magnitude a mm^3 threshold beats a voxel-count threshold by 0.0036
+  Detection F1 (95% CI [0.0016, 0.0058]).
+type: software
+license: Apache-2.0
+repository-code: 'https://github.com/adinathdukre/isles26-voxels-or-millimetres'
+url: 'https://github.com/adinathdukre/isles26-voxels-or-millimetres'
+authors:
+  - family-names: Kolli
+    given-names: Govinda
+    affiliation: MedOS, Abu Dhabi, UAE
+  - family-names: Dukre
+    given-names: Adinath Madhavrao
+    affiliation: MBZUAI, Abu Dhabi, UAE
+  - family-names: Razzak
+    given-names: Imran
+    affiliation: MBZUAI, Abu Dhabi, UAE
+contact:
+  - family-names: Razzak
+    given-names: Imran
+    affiliation: MBZUAI, Abu Dhabi, UAE
+    email: imran.razzak@mbzuai.ac.ae
+keywords:
+  - stroke lesion segmentation
+  - ISLES 2026
+  - nnU-Net
+  - lesion-wise detection
+  - connected-component filtering
+  - native-space MRI
+preferred-citation:
+  type: conference-paper
+  title: >-
+    Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering for
+    Native-Space Stroke Segmentation
+  authors:
+    - family-names: Kolli
+      given-names: Govinda
+      affiliation: MedOS, Abu Dhabi, UAE
+    - family-names: Dukre
+      given-names: Adinath Madhavrao
+      affiliation: MBZUAI, Abu Dhabi, UAE
+    - family-names: Razzak
+      given-names: Imran
+      affiliation: MBZUAI, Abu Dhabi, UAE
+  year: 2026
+  collection-title: Lecture Notes in Computer Science
+  collection-type: proceedings
+  conference:
+    name: MICCAI 2026 Workshop SWITCH+
+  publisher:
+    name: Springer
