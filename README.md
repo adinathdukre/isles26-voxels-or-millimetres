@@ -11,7 +11,7 @@ style="margin-bottom:-10px; display:block;" />
 </a>
 
 [![MICCAI 2026](https://img.shields.io/badge/MICCAI_2026-SWITCH%2B_Workshop-147B82?style=for-the-badge)](#-citation)
-[![ISLES'26](https://img.shields.io/badge/Challenge-ISLES'26-8A2BE2?style=for-the-badge)](#-what-was-submitted)
+[![ISLES'26](https://img.shields.io/badge/ISLES'26_%40_MICCAI_2026-Accepted-8A2BE2?style=for-the-badge)](#-what-was-submitted)
 [![nnU-Net v2](https://img.shields.io/badge/nnU--Net-v2_ResEnc--M-orange?style=for-the-badge)](training/README.md)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green?style=for-the-badge)](LICENSE)
 [![Visitors](https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fgithub.com%2Fadinathdukre%2Fisles26-voxels-or-millimetres&label=Views&countColor=%23147b82&style=for-the-badge)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2Fadinathdukre%2Fisles26-voxels-or-millimetres)
@@ -23,6 +23,7 @@ style="margin-bottom:-10px; display:block;" />
 </div>
 
 ## 🔥 News
+- 🎉 **Accepted** at **ISLES'26 @ MICCAI 2026**.
 - **[12 Sep 2026]** 🚀 Submitted ISLES'26 container, training code and measurement scripts released.
 
 ## Overview
