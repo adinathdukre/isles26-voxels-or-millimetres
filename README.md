@@ -10,6 +10,7 @@ alt="Typing SVG"
 style="margin-bottom:-10px; display:block;" />
 </a>
 
+[![Paper](https://img.shields.io/badge/Paper-OpenReview-8C1B13?style=for-the-badge)](https://openreview.net/forum?id=RnGE9a4HCq)
 [![MICCAI 2026](https://img.shields.io/badge/MICCAI_2026-SWITCH%2B_Workshop-147B82?style=for-the-badge)](#-citation)
 [![ISLES'26](https://img.shields.io/badge/ISLES'26_%40_MICCAI_2026-Accepted-8A2BE2?style=for-the-badge)](#-what-was-submitted)
 [![nnU-Net v2](https://img.shields.io/badge/nnU--Net-v2_ResEnc--M-orange?style=for-the-badge)](training/README.md)
@@ -23,7 +24,8 @@ style="margin-bottom:-10px; display:block;" />
 </div>
 
 ## 🔥 News
-- 🎉 **Accepted** at **ISLES'26 @ MICCAI 2026**.
+- 🎉 **Accepted** at **ISLES'26 @ MICCAI 2026**. Read the paper on [OpenReview](https://openreview.net/forum?id=RnGE9a4HCq).
+- **[27 Aug 2026]** 📄 Paper published on [OpenReview](https://openreview.net/forum?id=RnGE9a4HCq).
 - **[12 Sep 2026]** 🚀 Submitted ISLES'26 container, training code and measurement scripts released.
 
 ## Overview
@@ -122,6 +124,7 @@ You supply the ISLES'26 data (`ISLES_ATLAS3_RAW`) and the organisers' `eval_util
   series    = {Lecture Notes in Computer Science},
   publisher = {Springer},
   year      = {2026},
+  url       = {https://openreview.net/forum?id=RnGE9a4HCq},
   note      = {To appear; volume and pages not yet assigned}
 }
 ```
