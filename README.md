@@ -33,6 +33,12 @@ Code for our **ISLES'26** entry and the MICCAI 2026 SWITCH+ workshop paper. **Wh
 > [!IMPORTANT]
 > This repository is **code only**: no manuscript, imaging data, checkpoints or per-subject results. The scripts behind every number are in [`analysis/`](analysis/).
 
+<p align="center">
+<img src="./docs/assets/fig1_overview.png" alt="Overview of the instance decision layer" width="100%"/>
+<br/>
+<em><b>Fig. 1.</b> Overview of the instance decision layer. The nnU-Net probability map is submitted unchanged for PR-AUC and separately thresholded into connected components; components smaller than 30 mm³ are removed using the scan-specific threshold n<sub>min</sub> = ⌈30/ν⌉, where ν is the voxel volume from the image header.</em>
+</p>
+
 ## 💡 The Finding
 
 ISLES'26 ranks five metrics per case (Dice, |ΔV|, PR-AUC, Detection F1, |ΔN|). Our baseline's Dice (0.645) is near inter-rater agreement (0.76), but Detection F1 (0.533) is not, so the headroom is in **finding** lesions.
