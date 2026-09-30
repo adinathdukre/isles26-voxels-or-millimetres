@@ -26,7 +26,6 @@ style="margin-bottom:-10px; display:block;" />
 ## 🔥 News
 - 🎉 **Accepted** at **ISLES'26 @ MICCAI 2026**. Read the paper on [OpenReview](https://openreview.net/forum?id=RnGE9a4HCq).
 - **[27 Aug 2026]** 📄 Paper published on [OpenReview](https://openreview.net/forum?id=RnGE9a4HCq).
-- **[12 Sep 2026]** 🚀 Submitted ISLES'26 container, training code and measurement scripts released.
 
 ## Overview
 Code for our **ISLES'26** entry and the MICCAI 2026 SWITCH+ workshop paper. **What helped was not the network.** It was writing the small-component filter in **mm³ instead of voxels** and fitting it to the challenge's rank-based objective on pooled out-of-fold predictions. Larger planners, a transformer backbone, four new losses, six augmentation regimes and metadata conditioning all failed or stayed inside the seed-noise floor.
