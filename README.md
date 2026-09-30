@@ -45,6 +45,12 @@ ISLES'26 ranks five metrics per case (Dice, |ΔV|, PR-AUC, Detection F1, |ΔN|).
 
 ISLES'26 is native space: voxel volume spans **0.031 to 5.27 mm³** (168×), so a 20-voxel rule means 0.63 mm³ on one scanner and 105 mm³ on another. Our decision layer binarises at **τ = 0.5** and drops 26-connected components **< 30 mm³**, using each scan's own voxel size.
 
+<p align="center">
+<img src="./docs/assets/fig2_unit.png" alt="Why the unit matters" width="90%"/>
+<br/>
+<em><b>Fig. 2.</b> Why the unit matters. (a) Voxel volume ν across the cohort; the dashed line marks the 1 mm³ grid that ATLAS v2.0 guaranteed by registration. (b) A fixed 20-voxel rule expressed as the physical volume it removes, against a fixed 30 mm³ rule (dashed).</em>
+</p>
+
 - **Filtering at all:** Detection F1 **0.5333 → 0.5895**, |ΔN| **2.08 → 1.85**, for 0.001 Dice.
 - **mm³ vs. voxels:** a smaller **+0.0036** Detection F1 (95% CI [0.0016, 0.0058]), holding on held-out sites in 99.5% of 400 splits.
 
