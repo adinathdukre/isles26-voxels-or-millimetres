@@ -11,6 +11,7 @@ style="margin-bottom:-10px; display:block;" />
 </a>
 
 [![Paper](https://img.shields.io/badge/Paper-OpenReview-8C1B13?style=for-the-badge)](https://openreview.net/forum?id=RnGE9a4HCq)
+[![Project Page](https://img.shields.io/badge/Project-Page-147B82?style=for-the-badge&logo=googlechrome&logoColor=white)](https://adinathdukre.github.io/isles26-voxels-or-millimetres/)
 [![MICCAI 2026](https://img.shields.io/badge/MICCAI_2026-SWITCH%2B_Workshop-147B82?style=for-the-badge)](#-citation)
 [![ISLES'26](https://img.shields.io/badge/ISLES'26_%40_MICCAI_2026-Accepted-8A2BE2?style=for-the-badge)](#-what-was-submitted)
 [![nnU-Net v2](https://img.shields.io/badge/nnU--Net-v2_ResEnc--M-orange?style=for-the-badge)](training/README.md)
