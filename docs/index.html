@@ -41,21 +41,14 @@
 </section>
 <section class="section abstract-section" id="abstract"><div class="container narrow"><p class="section-kicker">01 / ABSTRACT</p><h2>Abstract</h2><div class="abstract-text"><p>ISLES 2026 scores five quantities per case, only one of which is Dice. Our nnU-Net baseline reaches a cross-validated Dice of 0.645 against the challenge’s reported inter-rater agreement of <span class="math inline">0.76\pm0.14</span> but a lesion-wise Detection F1 of only 0.533, so the larger relative gap is in finding lesions rather than outlining them. Removing small predicted components is the standard remedy, and its threshold can be written in voxels or in physical units; both are in use, but we are not aware of a comparison at a matched magnitude. We provide one on a native-space cohort whose voxel volume spans <span class="math inline">0.031</span>–<span class="math inline">5.27</span> mm<span class="math inline">^3</span>. Filtering at all, fitted to the challenge ranking rather than to Dice, raises Detection F1 to 0.590 and cuts lesion-count error from 2.08 to 1.85, for 0.001 of Dice and no training; lesion precision rises from 0.448 to 0.614 for a recall cost of 0.014. The choice of <em>units</em> is a second, far smaller effect: <span class="math inline">+0.0036</span> Detection F1 (95% CI <span class="math inline">[0.0016, 0.0058]</span>), roughly a twelfth of the first. It nonetheless holds on unseen sites in 99.5% of 400 site splits and follows a dose-response. Refitting the threshold under nested cross-validation, so it never sees the fold it is scored on, puts the selection optimism at only <span class="math inline">+0.0021</span>. In a thirteen-arm ablation calibrated against a repeated-seed control, only a longer schedule and a larger batch improve the ranked objective beyond that reference, and we report which widely-used ideas did not.</p></div></div></section>
 <section class="figure-section container" id="overview-figure"><figure class="overview-figure"><img src="assets/paper/fig1.png" alt="Figure 1" loading="lazy" /><figcaption><strong>Figure 1.</strong> Overview of the instance decision layer. An nnU-Net predicts a probability map, which is submitted unchanged for PR-AUC and separately thresholded into connected components. Components smaller than <span class="math inline">30\,\mathrm{mm}^3</span> are removed using the scan-specific threshold <span class="math inline">n_{\min}=\lceil 30/\nu\rceil</span>, where <span class="math inline">\nu</span> is the native voxel volume from the image header. <a href="assets/paper/arch11.pdf">Full-resolution PDF <span aria-hidden="true">↗</span></a></figcaption></figure></section>
-<section class="section container page-section results-wide" id="results"><div class="narrow"><p class="section-kicker">02 / RESULTS</p><h2>Results from the paper</h2><p class="section-intro">Tables and figures as they appear in the paper.</p></div><figure class="paper-table-figure"><figcaption><strong>Table 1.</strong> Single-change ablations (fold 0, 250 epochs, identical split, decision layer on every arm), sorted by Detection F1. Also run: DA5 (0.5971), batch Dice (0.5965), blob loss (0.5893), Tversky 0.2/0.8 (0.5797) and no mirroring (0.5673). Reference floor: Dice <span class="math inline">\pm0.0043</span>, F1 <span class="math inline">\pm0.0057</span>, AUC <span class="math inline">\pm0.0034</span>. <span class="math inline">^{\dagger}</span>a null across all five folds. Rows should be read against the floor, not as a ranking.</figcaption><img src="assets/paper/tab1.png" alt="Table 1" loading="lazy" style="width:min(100%,375px)" /></figure><figure class="paper-figure"><img src="assets/paper/fig2.png" alt="Figure 2" loading="lazy" /><figcaption><strong>Figure 2.</strong> Why the <em>unit</em> matters here. (a) Voxel volume <span class="math inline">\nu</span> across the cohort; dashed is the <span class="math inline">1</span> mm<span class="math inline">^3</span> grid ATLAS v2.0 guaranteed by registration. (b) A fixed 20-voxel rule expressed as the volume it actually removes, against a fixed mm<span class="math inline">^3</span> rule (dashed). <a href="assets/paper/voxel_volume.pdf">Full-resolution PDF <span aria-hidden="true">↗</span></a></figcaption></figure></section>
-<section class="section container narrow page-section" id="the-finding"><p class="section-kicker">03 / THE FINDING</p><h2>The Finding</h2><p>ISLES'26 ranks five metrics per case (Dice, |ΔV|, PR-AUC, Detection F1, |ΔN|). Our baseline's Dice (0.645) is near inter-rater agreement (0.76), but Detection F1 (0.533) is not, so the headroom is in <strong>finding</strong> lesions.</p>
+<section class="section container narrow page-section" id="the-finding"><p class="section-kicker">02 / THE FINDING</p><h2>The Finding</h2><p>ISLES'26 ranks five metrics per case (Dice, |ΔV|, PR-AUC, Detection F1, |ΔN|). Our baseline's Dice (0.645) is near inter-rater agreement (0.76), but Detection F1 (0.533) is not, so the headroom is in <strong>finding</strong> lesions.</p>
 <p>ISLES'26 is native space: voxel volume spans <strong>0.031 to 5.27 mm³</strong> (168×), so a 20-voxel rule means 0.63 mm³ on one scanner and 105 mm³ on another. Our decision layer binarises at <strong>τ = 0.5</strong> and drops 26-connected components <strong>&lt; 30 mm³</strong>, using each scan's own voxel size.</p>
-<p align="center">
-<img src="https://raw.githubusercontent.com/adinathdukre/isles26-voxels-or-millimetres/main/docs/assets/fig2_unit.png" alt="Why the unit matters" width="90%"/>
-<br/>
-<em><b>Fig. 2.</b> Why the unit matters. (a) Voxel volume ν across the cohort; the dashed line marks the 1 mm³ grid that ATLAS v2.0 guaranteed by registration. (b) A fixed 20-voxel rule expressed as the physical volume it removes, against a fixed 30 mm³ rule (dashed).</em>
-</p>
-
 <ul>
 <li><strong>Filtering at all:</strong> Detection F1 <strong>0.5333 → 0.5895</strong>, |ΔN| <strong>2.08 → 1.85</strong>, for 0.001 Dice.</li>
 <li><strong>mm³ vs. voxels:</strong> a smaller <strong>+0.0036</strong> Detection F1 (95% CI [0.0016, 0.0058]), holding on held-out sites in 99.5% of 400 splits.</li>
 </ul>
 <div class="callout callout-note"><strong>Note</strong><p>Seed-noise floor: Dice 0.0043, Detection F1 0.0057, PR-AUC 0.0034. Nothing smaller counts as a result.</p></div></section>
-<section class="section container narrow page-section" id="what-was-submitted"><p class="section-kicker">04 / WHAT WAS SUBMITTED</p><h2>What Was Submitted</h2><div class="table-scroll" tabindex="0"><table class="paper-table">
+<section class="section container narrow page-section" id="what-was-submitted"><p class="section-kicker">03 / WHAT WAS SUBMITTED</p><h2>What Was Submitted</h2><div class="table-scroll" tabindex="0"><table class="paper-table">
 <thead>
 <tr>
 <th>Component</th>
@@ -82,52 +75,7 @@
 </tbody>
 </table></div>
 <p>The whole method is in <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/submission/inference.py"><code>submission/inference.py</code></a>.</p></section>
-<section class="section container narrow page-section" id="what-did-not-work"><p class="section-kicker">05 / WHAT DID NOT WORK</p><h2>What Did Not Work</h2><div class="table-scroll" tabindex="0"><table class="paper-table">
-<thead>
-<tr>
-<th>Arm</th>
-<th>Outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ResEnc-L</td>
-<td>Tie at 250 ep, worse at 500 ep, ~3× the compute</td>
-</tr>
-<tr>
-<td>Primus (transformer)</td>
-<td>Detection F1 0.340 vs. 0.603</td>
-</tr>
-<tr>
-<td>Blob, Tversky, focal Tversky, batch Dice</td>
-<td>None beat the noise floor</td>
-</tr>
-<tr>
-<td>Augmentation changes</td>
-<td>nnU-Net default was best</td>
-</tr>
-<tr>
-<td>clDice</td>
-<td>+0.0144 Detection F1, but worse on overall rank</td>
-</tr>
-<tr>
-<td>FiLM metadata conditioning</td>
-<td>Null across 5 folds (p = 0.76)</td>
-</tr>
-<tr>
-<td>Naive / 3-member ensembles, confidence or learned filtering</td>
-<td>No gain beyond the floor</td>
-</tr>
-</tbody>
-</table></div>
-<div class="callout callout-warning"><strong>Warning</strong><p>Pooling all five folds reversed three single-fold conclusions. Two tooling bugs (a no-op clDice loss and a scorer that silently fell back to binary masks) were caught and fixed.</p></div></section>
-<section class="section container narrow page-section" id="caveats"><p class="section-kicker">06 / CAVEATS</p><h2>Caveats</h2><ul>
-<li>The preliminary leaderboard uses <strong>two cases</strong>, one of them from the public training set, so it rewards memorisation. Expect <strong>~0.65 Dice</strong> on held-out data.</li>
-<li>Most ablations are <strong>single-fold</strong>; only the decision layer and FiLM were run on all five.</li>
-<li>The filter removes 28.1% of ground-truth lesions (those under 30 mm³).</li>
-<li>The two-member GPU path has not been tested inside the container, and <code>analysis/sweep_mm3_all5.py</code> is a reconstruction not yet run end to end.</li>
-</ul></section>
-<section class="section container narrow page-section" id="more-results"><p class="section-kicker">07 / MORE RESULTS</p><h2>More from the code release</h2><details><summary>Main Results</summary><p>Pooled out-of-fold, n = 1,453, scored with the organisers' evaluation code.</p>
+<section class="section container page-section results-wide" id="results"><div class="narrow"><p class="section-kicker">04 / RESULTS</p><h2>Results</h2><div class="results-summary"><p>Pooled out-of-fold, n = 1,453, scored with the organisers' evaluation code.</p>
 <div align="center">
 <div class="table-scroll" tabindex="0"><table class="paper-table">
 <thead>
@@ -175,8 +123,47 @@
 </tr>
 </tbody>
 </table></div>
-</div></details></section>
-<section class="section container narrow page-section" id="code"><p class="section-kicker">08 / CODE</p><h2>Code and usage</h2><details open><summary>Quick Start</summary><pre><code class="language-bash">git clone https://github.com/adinathdukre/isles26-voxels-or-millimetres.git
+</div></div><h3 class="paper-results-title">From the paper</h3></div><figure class="paper-table-figure"><figcaption><strong>Table 1.</strong> Single-change ablations (fold 0, 250 epochs, identical split, decision layer on every arm), sorted by Detection F1. Also run: DA5 (0.5971), batch Dice (0.5965), blob loss (0.5893), Tversky 0.2/0.8 (0.5797) and no mirroring (0.5673). Reference floor: Dice <span class="math inline">\pm0.0043</span>, F1 <span class="math inline">\pm0.0057</span>, AUC <span class="math inline">\pm0.0034</span>. <span class="math inline">^{\dagger}</span>a null across all five folds. Rows should be read against the floor, not as a ranking.</figcaption><img src="assets/paper/tab1.png" alt="Table 1" loading="lazy" style="width:min(100%,467px)" /></figure><figure class="paper-figure"><img src="assets/paper/fig2.png" alt="Figure 2" loading="lazy" /><figcaption><strong>Figure 2.</strong> Why the <em>unit</em> matters here. (a) Voxel volume <span class="math inline">\nu</span> across the cohort; dashed is the <span class="math inline">1</span> mm<span class="math inline">^3</span> grid ATLAS v2.0 guaranteed by registration. (b) A fixed 20-voxel rule expressed as the volume it actually removes, against a fixed mm<span class="math inline">^3</span> rule (dashed). <a href="assets/paper/voxel_volume.pdf">Full-resolution PDF <span aria-hidden="true">↗</span></a></figcaption></figure></section>
+<section class="section container narrow page-section" id="what-did-not-work"><p class="section-kicker">05 / WHAT DID NOT WORK</p><h2>What Did Not Work</h2><div class="table-scroll" tabindex="0"><table class="paper-table">
+<thead>
+<tr>
+<th>Arm</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ResEnc-L</td>
+<td>Tie at 250 ep, worse at 500 ep, ~3× the compute</td>
+</tr>
+<tr>
+<td>Primus (transformer)</td>
+<td>Detection F1 0.340 vs. 0.603</td>
+</tr>
+<tr>
+<td>Blob, Tversky, focal Tversky, batch Dice</td>
+<td>None beat the noise floor</td>
+</tr>
+<tr>
+<td>Augmentation changes</td>
+<td>nnU-Net default was best</td>
+</tr>
+<tr>
+<td>clDice</td>
+<td>+0.0144 Detection F1, but worse on overall rank</td>
+</tr>
+<tr>
+<td>FiLM metadata conditioning</td>
+<td>Null across 5 folds (p = 0.76)</td>
+</tr>
+<tr>
+<td>Naive / 3-member ensembles, confidence or learned filtering</td>
+<td>No gain beyond the floor</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warning"><strong>Warning</strong><p>Pooling all five folds reversed three single-fold conclusions. Two tooling bugs (a no-op clDice loss and a scorer that silently fell back to binary masks) were caught and fixed.</p></div></section>
+<section class="section container narrow page-section" id="code"><p class="section-kicker">06 / CODE</p><h2>Code and usage</h2><details open><summary>Quick Start</summary><pre><code class="language-bash">git clone https://github.com/adinathdukre/isles26-voxels-or-millimetres.git
 cd isles26-voxels-or-millimetres
 pip install -r requirements.txt   # pinned versions affect the metrics
 source training/env.sh
@@ -191,7 +178,7 @@ python3 analysis/official_score.py --runs &quot;$A+$B&quot; --folds 0,1,2,3,4 \
         --thresholds 0.5 --min-sizes 0,20,30,40 --mm3 --tag oof
 </code></pre>
 <p>You supply the ISLES'26 data (<code>ISLES_ATLAS3_RAW</code>) and the organisers' <code>eval_utils.py</code> (in <code>analysis/official/</code>); neither is redistributed here. Setup, environment variables and per-number commands are in <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/training/README.md"><code>training/README.md</code></a> and <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/analysis/README.md"><code>analysis/README.md</code></a>.</p></details></section>
-<section class="section citation-section" id="citation"><div class="container narrow"><p class="section-kicker">09 / CITATION</p><div class="citation-heading"><h2>BibTeX</h2><button class="copy-button light-copy" data-copy="bibtex" type="button">Copy BibTeX</button></div><pre class="bibtex"><code id="bibtex">@inproceedings{kolli2026voxels,
+<section class="section citation-section" id="citation"><div class="container narrow"><p class="section-kicker">07 / CITATION</p><div class="citation-heading"><h2>BibTeX</h2><button class="copy-button light-copy" data-copy="bibtex" type="button">Copy BibTeX</button></div><pre class="bibtex"><code id="bibtex">@inproceedings{kolli2026voxels,
   author    = {Kolli, Govinda and Dukre, Adinath Madhavrao and Razzak, Imran},
   title     = {Voxels or Millimetres? A Controlled Comparison of Lesion-Size
                Filtering for Native-Space Stroke Segmentation},
