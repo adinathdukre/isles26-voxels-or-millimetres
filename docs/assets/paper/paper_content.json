@@ -1,0 +1,51 @@
+{
+ "key": "ISLES",
+ "title": "Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering\nfor Native-Space Stroke Segmentation",
+ "abstract": "ISLES 2026 scores five quantities per case, only one of which is Dice. Our nnU-Net\nbaseline reaches a cross-validated Dice of 0.645 against the challenge's reported\ninter-rater agreement of $0.76\\pm0.14$ but a lesion-wise Detection F1 of only 0.533, so the larger relative gap\nis in finding lesions rather than outlining them. Removing small predicted components\nis the standard remedy, and its threshold can be written in voxels or in physical\nunits; both are in use, but we are not aware of a comparison at a matched magnitude.\nWe provide one on a native-space cohort whose voxel volume spans\n$0.031$--$5.27$\\,mm$^3$. Filtering at all, fitted to the challenge ranking rather than\nto Dice, raises Detection F1 to 0.590 and cuts lesion-count error from 2.08 to 1.85,\nfor 0.001 of Dice and no training; lesion precision rises from 0.448 to 0.614 for a\nrecall cost of 0.014. The choice of \\emph{units} is a second, far smaller effect: $+0.0036$ Detection F1\n(95\\% CI $[0.0016, 0.0058]$), roughly a twelfth of the first. It nonetheless holds on\nunseen sites in 99.5\\% of 400 site splits and follows a dose-response. Refitting the\nthreshold under nested cross-validation, so it never sees the fold it is scored on,\nputs the selection optimism at only $+0.0021$. In a thirteen-arm ablation calibrated against\na repeated-seed control, only a longer schedule and a larger batch improve the ranked\nobjective beyond that reference, and we report which widely-used ideas did not.\n\\keywords{Ischemic stroke \\and Lesion segmentation \\and nnU-Net \\and ISLES 2026\n\\and Instance segmentation \\and Post-processing.}",
+ "macros": "\\renewcommand\\UrlFont{\\color{blue}\\rmfamily}",
+ "figures": [
+  {
+   "files": [
+    "figures/arch11.pdf"
+   ],
+   "caption": "Overview of the instance decision layer. An nnU-Net predicts a probability\nmap, which is submitted unchanged for PR-AUC and separately thresholded into connected\ncomponents. Components smaller than $30\\,\\mathrm{mm}^3$ are removed using the\nscan-specific threshold $n_{\\min}=\\lceil 30/\\nu\\rceil$, where $\\nu$ is the native voxel\nvolume from the image header.}\n\\label{fig:method",
+   "label": "fig:method",
+   "resolved": [
+    "arch11.pdf"
+   ]
+  },
+  {
+   "files": [
+    "figures/voxel_volume.pdf"
+   ],
+   "caption": "Why the \\emph{unit} matters here. (a) Voxel volume $\\nu$ across the cohort;\ndashed is the $1$\\,mm$^3$ grid ATLAS v2.0 guaranteed by registration. (b) A fixed\n20-voxel rule expressed as the volume it actually removes, against a fixed mm$^3$ rule\n(dashed).}\n\\label{fig:units",
+   "label": "fig:units",
+   "resolved": [
+    "voxel_volume.pdf"
+   ]
+  }
+ ],
+ "tables": [
+  {
+   "latex": "[t]\n\\caption{Single-change ablations (fold 0, 250 epochs, identical split, decision layer on\nevery arm), sorted by Detection F1. Also run: DA5 (0.5971), batch Dice (0.5965), blob\nloss (0.5893), Tversky 0.2/0.8 (0.5797) and no mirroring (0.5673). Reference floor:\nDice $\\pm0.0043$, F1 $\\pm0.0057$, AUC $\\pm0.0034$. $^{\\dagger}$a null across all five\nfolds. Rows should be read against the floor, not as a ranking.}\n\\label{tab:ablation}\n\\centering\n\\small\n\\begin{tabular}{lccccc}\n\\toprule\nArm & Dice & F1 & $|\\Delta N|$ & $|\\Delta V|$ & AUC \\\\\n\\midrule\n500 epochs               & \\textbf{0.6733} & \\textbf{0.6275} & 1.69 & 5.49 & 0.7625 \\\\\nFiLM metadata$^{\\dagger}$& 0.6647 & 0.6152 & \\textbf{1.63} & 5.61 & -- \\\\\noversample 0.66          & 0.6642 & 0.6112 & 1.75 & 5.48 & 0.7511 \\\\\nbatch size 4             & 0.6693 & 0.6094 & 1.69 & \\textbf{5.11} & \\textbf{0.7619} \\\\\n\\emph{seed control}      & \\emph{0.6617} & \\emph{0.6086} & \\emph{1.72} & \\emph{5.67} & \\emph{0.7466} \\\\\nbaseline                 & 0.6659 & 0.6030 & 1.75 & 5.86 & 0.7499 \\\\\n\\bottomrule\n\\end{tabular}",
+   "label": "tab:ablation"
+  }
+ ],
+ "sections": [
+  "s:Introduction",
+  "s:Methods",
+  "s:Preprocessing, network and training",
+  "s:The instance decision layer",
+  "s:Evaluation protocol",
+  "s:Results",
+  "s:Where the headroom is, and what the layer buys",
+  "s:Units versus threshold magnitude",
+  "s:How much of the gain is selection optimism?",
+  "s:A seed control, and a thirteen-arm ablation",
+  "s:Discussion and Conclusion"
+ ],
+ "figureFiles": [
+  "arch11.pdf",
+  "voxel_volume.pdf"
+ ]
+}
