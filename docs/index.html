@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering for Native-Space Stroke Segmentation</title>
+<meta name="description" content="Code for our ISLES&#x27;26 entry and the MICCAI 2026 SWITCH+ workshop paper. What helped was not the network. It was writing the small-component filter in mm³ instead of voxels and fitting it to the challenge&#x27;s rank-based objective on pooled out-of-fold predictions. Larger planners, a transformer backbon" />
+<meta name="theme-color" content="#147b82" />
+<meta property="og:title" content="Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering for Native-Space Stroke Segmentation" />
+<meta property="og:description" content="Code for our ISLES&#x27;26 entry and the MICCAI 2026 SWITCH+ workshop paper. What helped was not the network. It was writing the small-component filter in mm³ instead of voxels and fitting it to the challenge&#x27;s rank-based objective on pooled out-of-fold predictions. Larger planners, a transformer backbon" />
+<meta property="og:type" content="website" />
+<meta name="citation_title" content="Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering for Native-Space Stroke Segmentation" />
+<link rel="icon" href="https://raw.githubusercontent.com/genmilab/VGS-Decoding/main/docs/assets/genmilab-logo.png" />
+<link rel="stylesheet" href="project.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="project.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="nav-wrap">
+<a class="brand" href="#top">Voxels or Millimetres?</a>
+<nav aria-label="Main navigation"><a href="#-main-results">Main Results</a><a href="#-quick-start">Quick Start</a><a href="#-citation">Citation</a></nav>
+<a class="nav-code" href="https://github.com/adinathdukre/isles26-voxels-or-millimetres">GitHub <span aria-hidden="true">↗</span></a>
+</div></header>
+<main id="main">
+<section class="hero container" id="top" aria-labelledby="project-title">
+<a class="lab-identity" href="https://github.com/genmilab" aria-label="GenMI-Lab on GitHub">
+<img src="https://raw.githubusercontent.com/genmilab/VGS-Decoding/main/docs/assets/genmilab-logo.png" width="460" height="460" alt="GenMI-Lab logo" />
+<span><strong>GenMI-Lab</strong><span>MBZUAI</span></span></a>
+<p class="project-name">Voxels or Millimetres?</p>
+<h1 id="project-title">Voxels or Millimetres? A Controlled Comparison of Lesion-Size Filtering for Native-Space Stroke Segmentation</h1>
+<div class="authors" aria-label="Authors"><span><a href="https://github.com/govindakolli">Govinda Kolli</a></span><span><a href="https://github.com/adinathdukre">Adinath Madhavrao Dukre</a></span><span>Imran Razzak</span></div>
+
+
+<p class="hero-description">Write the threshold in mm³, not voxels.<br />Fit it to the challenge&#x27;s own ranking.<br />Pooled out-of-fold over 1,453 subjects.</p>
+<div class="resource-links"><a class="button button-primary" href="https://openreview.net/forum?id=RnGE9a4HCq"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13H5zM14 3v6h5M8 13h8M8 17h6"/></svg>Paper</a><a class="button button-secondary" href="https://github.com/adinathdukre/isles26-voxels-or-millimetres"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-12-2 14"/></svg>Code</a><a class="button button-secondary" href="#-main-results">Results <span aria-hidden="true">↓</span></a><a class="button button-secondary" href="#-citation">Citation <span aria-hidden="true">↓</span></a></div>
+<div class="hero-meta"><span>MICCAI 2026 SWITCH+ Workshop</span><span>ISLES&#x27;26 @ MICCAI 2026 Accepted</span></div>
+</section>
+<section class="section container narrow page-section" id="-news"><p class="section-kicker">01 / NEWS</p><h2>News</h2>
+<ul>
+<li>🎉 <strong>Accepted</strong> at <strong>ISLES'26 @ MICCAI 2026</strong>. Read the paper on <a href="https://openreview.net/forum?id=RnGE9a4HCq">OpenReview</a>.</li>
+<li><strong>[27 Aug 2026]</strong> 📄 Paper published on <a href="https://openreview.net/forum?id=RnGE9a4HCq">OpenReview</a>.</li>
+</ul>
+</section>
+<section class="section container narrow page-section" id="overview"><p class="section-kicker">02 / OVERVIEW</p><h2>Overview</h2>
+<p>Code for our <strong>ISLES'26</strong> entry and the MICCAI 2026 SWITCH+ workshop paper. <strong>What helped was not the network.</strong> It was writing the small-component filter in <strong>mm³ instead of voxels</strong> and fitting it to the challenge's rank-based objective on pooled out-of-fold predictions. Larger planners, a transformer backbone, four new losses, six augmentation regimes and metadata conditioning all failed or stayed inside the seed-noise floor.</p>
+<div class="callout callout-important"><strong>Important</strong><p>This repository is <strong>code only</strong>: no manuscript, imaging data, checkpoints or per-subject results. The scripts behind every number are in <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/tree/main/analysis/"><code>analysis/</code></a>.</p></div>
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/adinathdukre/isles26-voxels-or-millimetres/main/docs/assets/fig1_overview.png" alt="Overview of the instance decision layer" width="100%"/>
+<br/>
+<em><b>Fig. 1.</b> Overview of the instance decision layer. The nnU-Net probability map is submitted unchanged for PR-AUC and separately thresholded into connected components; components smaller than 30 mm³ are removed using the scan-specific threshold n<sub>min</sub> = ⌈30/ν⌉, where ν is the voxel volume from the image header.</em>
+</p>
+</section>
+<section class="section container narrow page-section" id="-the-finding"><p class="section-kicker">03 / THE FINDING</p><h2>The Finding</h2>
+<p>ISLES'26 ranks five metrics per case (Dice, |ΔV|, PR-AUC, Detection F1, |ΔN|). Our baseline's Dice (0.645) is near inter-rater agreement (0.76), but Detection F1 (0.533) is not, so the headroom is in <strong>finding</strong> lesions.</p>
+<p>ISLES'26 is native space: voxel volume spans <strong>0.031 to 5.27 mm³</strong> (168×), so a 20-voxel rule means 0.63 mm³ on one scanner and 105 mm³ on another. Our decision layer binarises at <strong>τ = 0.5</strong> and drops 26-connected components <strong>&lt; 30 mm³</strong>, using each scan's own voxel size.</p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/adinathdukre/isles26-voxels-or-millimetres/main/docs/assets/fig2_unit.png" alt="Why the unit matters" width="90%"/>
+<br/>
+<em><b>Fig. 2.</b> Why the unit matters. (a) Voxel volume ν across the cohort; the dashed line marks the 1 mm³ grid that ATLAS v2.0 guaranteed by registration. (b) A fixed 20-voxel rule expressed as the physical volume it removes, against a fixed 30 mm³ rule (dashed).</em>
+</p>
+
+<ul>
+<li><strong>Filtering at all:</strong> Detection F1 <strong>0.5333 → 0.5895</strong>, |ΔN| <strong>2.08 → 1.85</strong>, for 0.001 Dice.</li>
+<li><strong>mm³ vs. voxels:</strong> a smaller <strong>+0.0036</strong> Detection F1 (95% CI [0.0016, 0.0058]), holding on held-out sites in 99.5% of 400 splits.</li>
+</ul>
+<div class="callout callout-note"><strong>Note</strong><p>Seed-noise floor: Dice 0.0043, Detection F1 0.0057, PR-AUC 0.0034. Nothing smaller counts as a result.</p></div>
+</section>
+<section class="section container narrow page-section" id="-what-was-submitted"><p class="section-kicker">04 / WHAT WAS SUBMITTED</p><h2>What Was Submitted</h2>
+<div class="table-scroll" tabindex="0"><table class="paper-table">
+<thead>
+<tr>
+<th>Component</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>nnU-Net v2 ResEnc-M, <code>3d_fullres</code>, T1w only</td>
+</tr>
+<tr>
+<td>Ensemble</td>
+<td>500-epoch trainer + Dice+TopK10 (250 ep), folds 0–4, softmax weights 0.65 / 0.35</td>
+</tr>
+<tr>
+<td>Checkpoint</td>
+<td><code>checkpoint_final.pth</code></td>
+</tr>
+<tr>
+<td>Decision layer</td>
+<td>τ = 0.5, drop components &lt; 30 mm³; soft map shipped unfiltered</td>
+</tr>
+</tbody>
+</table></div>
+<p>The whole method is in <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/submission/inference.py"><code>submission/inference.py</code></a>.</p>
+</section>
+<section class="section container narrow page-section" id="-main-results"><p class="section-kicker">05 / MAIN RESULTS</p><h2>Main Results</h2>
+<p>Pooled out-of-fold, n = 1,453, scored with the organisers' evaluation code.</p>
+<div align="center">
+<div class="table-scroll" tabindex="0"><table class="paper-table">
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: center;">Dice ↑</th>
+<th style="text-align: center;">Det. F1 ↑</th>
+<th style="text-align: center;">|ΔN| ↓</th>
+<th style="text-align: center;">|ΔV| (mL) ↓</th>
+<th style="text-align: center;">PR-AUC ↑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>250-ep baseline</td>
+<td style="text-align: center;">0.6452</td>
+<td style="text-align: center;">0.5333</td>
+<td style="text-align: center;">2.08</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">0.7339</td>
+</tr>
+<tr>
+<td>+ 30 mm³ decision layer</td>
+<td style="text-align: center;">0.6441</td>
+<td style="text-align: center;">0.5895</td>
+<td style="text-align: center;">1.85</td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;">0.7339</td>
+</tr>
+<tr>
+<td>500-ep member + decision layer</td>
+<td style="text-align: center;"><strong>0.6565</strong></td>
+<td style="text-align: center;"><strong>0.6097</strong></td>
+<td style="text-align: center;"><strong>1.81</strong></td>
+<td style="text-align: center;">5.36</td>
+<td style="text-align: center;">0.7528</td>
+</tr>
+<tr>
+<td><strong>Shipped ensemble</strong> (equal weights)</td>
+<td style="text-align: center;">0.6552</td>
+<td style="text-align: center;">0.6063</td>
+<td style="text-align: center;">1.82</td>
+<td style="text-align: center;"><strong>5.25</strong></td>
+<td style="text-align: center;"><strong>0.7617</strong></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</section>
+<section class="section container narrow page-section" id="-what-did-not-work"><p class="section-kicker">06 / WHAT DID NOT WORK</p><h2>What Did Not Work</h2>
+<div class="table-scroll" tabindex="0"><table class="paper-table">
+<thead>
+<tr>
+<th>Arm</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ResEnc-L</td>
+<td>Tie at 250 ep, worse at 500 ep, ~3× the compute</td>
+</tr>
+<tr>
+<td>Primus (transformer)</td>
+<td>Detection F1 0.340 vs. 0.603</td>
+</tr>
+<tr>
+<td>Blob, Tversky, focal Tversky, batch Dice</td>
+<td>None beat the noise floor</td>
+</tr>
+<tr>
+<td>Augmentation changes</td>
+<td>nnU-Net default was best</td>
+</tr>
+<tr>
+<td>clDice</td>
+<td>+0.0144 Detection F1, but worse on overall rank</td>
+</tr>
+<tr>
+<td>FiLM metadata conditioning</td>
+<td>Null across 5 folds (p = 0.76)</td>
+</tr>
+<tr>
+<td>Naive / 3-member ensembles, confidence or learned filtering</td>
+<td>No gain beyond the floor</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warning"><strong>Warning</strong><p>Pooling all five folds reversed three single-fold conclusions. Two tooling bugs (a no-op clDice loss and a scorer that silently fell back to binary masks) were caught and fixed.</p></div>
+</section>
+<section class="section container narrow page-section" id="️-caveats"><p class="section-kicker">07 / CAVEATS</p><h2>Caveats</h2>
+<ul>
+<li>The preliminary leaderboard uses <strong>two cases</strong>, one of them from the public training set, so it rewards memorisation. Expect <strong>~0.65 Dice</strong> on held-out data.</li>
+<li>Most ablations are <strong>single-fold</strong>; only the decision layer and FiLM were run on all five.</li>
+<li>The filter removes 28.1% of ground-truth lesions (those under 30 mm³).</li>
+<li>The two-member GPU path has not been tested inside the container, and <code>analysis/sweep_mm3_all5.py</code> is a reconstruction not yet run end to end.</li>
+</ul>
+</section>
+<section class="section container narrow page-section" id="-quick-start"><p class="section-kicker">08 / QUICK START</p><h2>Quick Start</h2>
+<pre><code class="language-bash">git clone https://github.com/adinathdukre/isles26-voxels-or-millimetres.git
+cd isles26-voxels-or-millimetres
+pip install -r requirements.txt   # pinned versions affect the metrics
+source training/env.sh
+
+python3 training/convert_to_nnunet.py
+nnUNetv2_plan_and_preprocess -d 1 -pl nnUNetPlannerResEncM -c 3d_fullres
+training/train_shipped.sh         # keeps --npz softmax maps
+
+A=nnUNetTrainer_500epochs__nnUNetResEncUNetMPlans__3d_fullres
+B=nnUNetTrainerDiceTopK10_250epochs__nnUNetResEncUNetMPlans__3d_fullres
+python3 analysis/official_score.py --runs &quot;$A+$B&quot; --folds 0,1,2,3,4 \
+        --thresholds 0.5 --min-sizes 0,20,30,40 --mm3 --tag oof
+</code></pre>
+<p>You supply the ISLES'26 data (<code>ISLES_ATLAS3_RAW</code>) and the organisers' <code>eval_utils.py</code> (in <code>analysis/official/</code>); neither is redistributed here. Setup, environment variables and per-number commands are in <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/training/README.md"><code>training/README.md</code></a> and <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/analysis/README.md"><code>analysis/README.md</code></a>.</p>
+</section>
+<section class="section container narrow page-section" id="-acknowledgments"><p class="section-kicker">09 / ACKNOWLEDGMENTS</p><h2>Acknowledgments</h2>
+<p>Thanks to the ISLES'26 organisers (challenge, data and <a href="https://github.com/ezequieldlrosa/isles26-docker-template">submission template</a>), the ATLAS v3.0 contributors, and the <a href="https://github.com/MIC-DKFZ/nnUNet">nnU-Net</a> and <a href="https://github.com/BrainLesion/panoptica">Panoptica</a> authors.</p>
+</section>
+<section class="section container narrow page-section" id="-contact"><p class="section-kicker">10 / CONTACT</p><h2>Contact</h2>
+<p>Open an <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/issues">issue</a> or contact <a href="https://github.com/govindakolli">Govinda Kolli</a> and <a href="https://github.com/adinathdukre">Adinath Madhavrao Dukre</a>.</p>
+</section>
+<section class="section container narrow page-section" id="-license"><p class="section-kicker">11 / LICENSE</p><h2>License</h2>
+<p>Apache 2.0 (see <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/tree/main/LICENSE"><code>LICENSE</code></a>). Third-party material, including the LGPL <code>connected-components-3d</code> dependency, is listed in <a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/tree/main/NOTICE"><code>NOTICE</code></a>. The ISLES'26 data and <code>eval_utils.py</code> are not covered and not redistributed.</p>
+<div class="callout callout-important"><strong>Important</strong><p>For research only. Not approved for clinical use.</p></div>
+</section>
+<section class="section citation-section" id="-citation"><div class="container narrow"><p class="section-kicker">12 / CITATION</p><div class="citation-heading"><h2>Cite this work.</h2><button class="copy-button light-copy" data-copy="bibtex" type="button">Copy BibTeX</button></div><pre class="bibtex"><code id="bibtex">@inproceedings{kolli2026voxels,
+  author    = {Kolli, Govinda and Dukre, Adinath Madhavrao and Razzak, Imran},
+  title     = {Voxels or Millimetres? A Controlled Comparison of Lesion-Size
+               Filtering for Native-Space Stroke Segmentation},
+  booktitle = {MICCAI 2026 Workshop on SWITCH+},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  year      = {2026},
+  url       = {https://openreview.net/forum?id=RnGE9a4HCq},
+  note      = {To appear; volume and pages not yet assigned}
+}</code></pre></div></section>
+</main>
+<footer class="site-footer"><div class="container">
+<a class="lab-footer" href="https://github.com/genmilab" aria-label="GenMI-Lab on GitHub">
+<img src="https://raw.githubusercontent.com/genmilab/VGS-Decoding/main/docs/assets/genmilab-logo.png" width="460" height="460" loading="lazy" alt="GenMI-Lab logo" /><span>GenMI-Lab</span></a>
+<p>Research code</p>
+<div><a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres">Source code</a><a href="https://github.com/adinathdukre/isles26-voxels-or-millimetres/blob/main/LICENSE">Code license</a></div>
+</div></footer>
+<div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+</body>
+</html>
